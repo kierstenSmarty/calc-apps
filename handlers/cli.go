@@ -5,16 +5,18 @@ import (
 	"fmt"
 	"io"
 	"strconv"
-
-	"github.com/kierstenSmarty/calc-lib"
 )
+
+type Calculator interface {
+	Calculate(a, b int) int
+}
 
 type Handler struct {
 	stdout    io.Writer
-	calulator *calc.Addition
+	calulator Calculator
 }
 
-func NewHandler(stdout io.Writer, calculator *calc.Addition) *Handler {
+func NewHandler(stdout io.Writer, calculator Calculator) *Handler {
 	return &Handler{
 		stdout:    stdout,
 		calulator: calculator,
@@ -35,7 +37,7 @@ func (this *Handler) Handle(args []string) error {
 		return fmt.Errorf("%w: %w", errInvalidArgument, err)
 	}
 
-	calculator := &calc.Addition{}
+	calculator := this.calulator
 	result := calculator.Calculate(a, b)
 
 	_, err = fmt.Println(result)
