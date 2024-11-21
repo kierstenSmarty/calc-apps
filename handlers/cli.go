@@ -40,9 +40,9 @@ func (this *Handler) Handle(args []string) error {
 	calculator := this.calulator
 	result := calculator.Calculate(a, b)
 
-	_, err = fmt.Println(result)
+	_, err = fmt.Fprint(this.stdout, result)
 	if err != nil {
-		return err
+		return fmt.Errorf("%w: %w", errWriterFailure, err)
 	}
 
 	return nil
